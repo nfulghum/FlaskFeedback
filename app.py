@@ -31,7 +31,7 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
-
+        session['username'] = new_user.username
         return redirect('/secret')
     else:
         return render_template('register.html', form=form)
@@ -47,6 +47,7 @@ def login():
         user = User.authenticate(username, password)
         if user:
             flash(f"Welcome Back! {user.username}")
+            session['username'] = user.username
             return redirect('/secret')
         else:
             form.username.errors = ['Invalid username/password']
@@ -56,4 +57,8 @@ def login():
 
 @app.route('/secret')
 def secret():
+    if "username" not in session:
+        flash("Please login first")
+        return redirect('/login')
+
     return("You made it")
