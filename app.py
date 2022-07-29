@@ -16,6 +16,11 @@ connect_db(app)
 toolbar = DebugToolbarExtension(app)
 
 
+@app.route('/')
+def home_page():
+    return render_template('index.html')
+
+
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -53,6 +58,13 @@ def login():
             form.username.errors = ['Invalid username/password']
 
     return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+def logout_user():
+    session.pop('username')
+    flash("Come back soon!")
+    return redirect('/login')
 
 
 @app.route('/secret')
